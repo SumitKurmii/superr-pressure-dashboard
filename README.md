@@ -62,5 +62,5 @@ python -m http.server 8000
 
 ## Author
 
-**YOUR NAME**
+**SUMIT**
 [LinkedIn](https://linkedin.com/in/YOUR-PROFILE) | [GitHub](https://github.com/YOUR-USERNAME)
