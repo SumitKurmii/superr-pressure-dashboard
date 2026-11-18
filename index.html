@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SupeRR Selector S2 | Who delivers under pressure</title>
+<meta name="description" content="Top 10 IPL and T20I batters and bowlers in high-leverage moments, 2022-2026. Leverage-based pressure model with shrinkage and bootstrap intervals.">
+<meta property="og:title" content="Who delivers when the match is on the line?">
+<meta property="og:description" content="Top 10 batters and bowlers under pressure, IPL + T20I 2022-2026.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#f6f4f1;--ink:#14213d;--mute:#5d6678;--line:#d9d5cf;--card:#fff;--pink:#c2185b;--blue:#2b5f9e;--soft:#e8e4de;--good:#2e7d4f}
+@media (prefers-color-scheme:dark){:root{--bg:#10172a;--ink:#eef0f5;--mute:#a4adc2;--line:#2c3652;--card:#182038;--pink:#ff6f9f;--blue:#7fb0ee;--soft:#222c48;--good:#6fd09a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:28px 16px 60px}
+h1{font:700 clamp(26px,5vw,40px)/1.12 Georgia,"Times New Roman",serif;margin:0 0 10px;max-width:24ch}
+h2{font:700 21px/1.2 Georgia,serif;margin:40px 0 8px}
+p{margin:0 0 10px;max-width:70ch}
+.mute,.small{color:var(--mute)}.small{font-size:12.5px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font:700 26px Georgia,serif;color:var(--pink)}
+.kpi span{font-size:12.5px;color:var(--mute)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0 12px}
+.seg button{font:inherit;background:transparent;color:var(--ink);border:0;padding:9px 22px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:12px 0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mute);margin-bottom:8px}
+.legend i{display:inline-block;vertical-align:middle;margin-right:6px}
+#plot{width:100%;display:block}
+#plot text{fill:var(--mute);font-size:11px}
+#plot .nm{fill:var(--ink);font-size:12.5px}
+#plot g.r{cursor:pointer}#plot g.r:hover rect.hov{fill:var(--soft)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-weight:600;text-align:right;padding:8px 6px;border-bottom:2px solid var(--line);cursor:pointer;white-space:nowrap;color:var(--mute);font-size:12.5px}
+th:nth-child(2),td:nth-child(2){text-align:left}
+td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+td:first-child{font:700 16px Georgia,serif;color:var(--pink);text-align:center}
+tr.d td{background:var(--soft);text-align:left;font-size:13px}
+.det{display:flex;flex-wrap:wrap;gap:6px 26px}.det b{display:block;font-weight:500;color:var(--mute);font-size:12px}
+tbody tr.m{cursor:pointer}tbody tr.m:hover td{background:var(--soft)}
+.pill{display:inline-block;height:8px;border-radius:4px;background:var(--blue);vertical-align:middle;margin-right:6px}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.bars div{display:grid;grid-template-columns:125px 1fr 44px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.bar{height:12px;background:var(--soft);border-radius:2px;overflow:hidden}.bar span{display:block;height:100%}
+.sl{font-size:12.5px;display:grid;grid-template-columns:minmax(150px,1.3fr) 1fr 1fr;gap:10px;align-items:center;margin:6px 0}
+.sl .bar{height:10px}
+.tbl-wrap{overflow-x:auto}
+ul{padding-left:18px;margin:6px 0}li{margin:4px 0;max-width:75ch}
+footer{margin-top:40px;font-size:12.5px;color:var(--mute)}
+@media (max-width:640px){.hide-s{display:none}}
+</style>
+</head>
+<body><main>
+<h1>Who delivers when the match is on the line?</h1>
+<p>Top 10 batters and bowlers in high-pressure moments, from IPL and T20I ball-by-ball data, 2022 to 2026. A ball counts as pressure when the next delivery can swing the win probability sharply and the contest is still open.</p>
+
+<div class="kpis">
+<div class="kpi"><b>780</b><span>matches in rating scope</span></div>
+<div class="kpi"><b>193,167</b><span>deliveries modelled</span></div>
+<div class="kpi"><b>17.9%</b><span>of balls are pressure balls</span></div>
+<div class="kpi"><b>4.2&times;</b><span>win-prob swing per ball in chases</span></div>
+<div class="kpi"><b>0.89</b><span>chase win-prob model AUC</span></div>
+<div class="kpi"><b>1,000</b><span>match resamples for intervals</span></div>
+</div>
+
+<div class="seg" role="group" aria-label="Choose list"><button id="bBat" aria-pressed="true">Batters</button><button id="bBowl" aria-pressed="false">Bowlers</button></div>
+
+<div class="panel">
+<div class="legend"><span><i style="width:10px;height:10px;border-radius:50%;background:var(--pink)"></i>Estimate under pressure</span><span><i style="width:2px;height:14px;background:var(--ink)"></i>Their usual level</span><span><i style="width:22px;height:5px;background:var(--blue);opacity:.55"></i>Plausible range (5th to 95th percentile)</span></div>
+<svg id="plot" role="img" aria-label="Forest plot of pressure value estimates"></svg>
+<p class="small" style="margin:6px 0 0">Units: runs per 100 pressure balls above the league-average pressure ball, after adjusting for match state. Ranked by the 5th percentile (the "floor"), so thin samples are penalised.</p>
+</div>
+
+<div class="panel tbl-wrap">
+<table id="tbl"><thead></thead><tbody></tbody></table>
+<p class="small" style="margin:8px 0 0">Click a column to sort. Click a row for raw numbers. "In top 10" = share of 1,000 match resamples where the player stays in the top 10.</p>
+</div>
+
+<h2>How pressure is defined</h2>
+<p>Two models learn from the data: a win-probability model (chases AUC 0.89) and a leverage index, the win-probability gap between the next ball being a six and being a wicket, divided by the league average. A <b>pressure ball</b> has leverage of at least 1.5 and win probability between 10% and 90%. That covers 17.9% of all balls and 29% of chase balls.</p>
+<div class="cmp">
+<div class="panel"><b>Average leverage of flagged balls</b><div class="bars" id="c1"></div><p class="small">1.00 is an average ball.</p></div>
+<div class="panel"><b>Flagged balls already decided</b><div class="bars" id="c2"></div><p class="small">Win probability under 10% or over 90%.</p></div>
+</div>
+<p class="small">The alternative draft flag is no more intense than an average ball and mostly picks death overs. Against a baseline that includes the powerplay, 86% of batters then appear to improve and 86% of bowlers appear to get worse.</p>
+
+<h2>How stable are the lists?</h2>
+<p>Names kept from the final top 10 when one assumption changes. Batters hold up better (6 to 9 of 10) than bowlers (4 to 7 of 10); places 7 to 10 are close calls.</p>
+<div class="panel" id="sens"></div>
+
+<h2>Method in brief</h2>
+<ul>
+<li>Each ball gets a run value: runs plus the change in expected remaining runs, so wickets and wasted balls count.</li>
+<li>Players are compared with their own usual level and with the league in the same match state. Small samples are shrunk toward the average (empirical Bayes).</li>
+<li>Ranking uses the 5th percentile of 1,000 resamples of whole matches.</li>
+<li>Eligibility: at least 60 pressure balls (batters) or 48 (bowlers) in 8+ innings, and at or above league average in the player's own pressure sample.</li>
+<li>53 matches involving associate nations are excluded.</li>
+</ul>
+
+<h2>Limitations</h2>
+<ul>
+<li>Pressure and the 1.5 leverage threshold are analyst choices; places 7 to 10 move under other settings.</li>
+<li>First-innings win probability is weak, so first-innings pressure is under-identified.</li>
+<li>No adjustment for opposition, venue, season or batting order beyond match state and format.</li>
+<li>Pressure-specific skill beyond general quality is small, so intervals matter more than exact order. Split-half rank correlation is about 0.30.</li>
+<li>Sooryavanshi's lead rests on 92 balls; the model deliberately pulls it toward the mean.</li>
+<li>Rankings describe past performance only, not availability, fitness, price or squad fit.</li>
+</ul>
+
+<footer>Data: IPL 2022-2026 and T20I ball-by-ball, matches, competitions, teams, playing XI and player-mapping files. SupeRR Selector Season 2, Round 1.</footer>
+</main>
+<script>
+const D={"bat":[{"n":"Vaibhav Sooryavanshi","k":1,"pb":92,"ipl":79,"t20":13,"m":16,"pv":40.3,"ab":30.0,"lo":22.1,"hi":57.9,"pr":98,"a":267,"b":211,"c":2.2,"e":6.0},{"n":"Suryakumar Yadav","k":2,"pb":526,"ipl":239,"t20":287,"m":59,"pv":29.5,"ab":26.1,"lo":21.0,"hi":38.0,"pr":99,"a":158,"b":167,"c":3.6,"e":4.4},{"n":"Abhishek Sharma","k":3,"pb":346,"ipl":221,"t20":125,"m":65,"pv":31.9,"ab":33.1,"lo":16.5,"hi":44.7,"pr":94,"a":188,"b":186,"c":6.1,"e":5.3},{"n":"Phil Salt","k":4,"pb":251,"ipl":97,"t20":154,"m":34,"pv":23.7,"ab":19.6,"lo":12.7,"hi":34.4,"pr":82,"a":170,"b":169,"c":4.4,"e":4.6},{"n":"Heinrich Klaasen","k":5,"pb":225,"ipl":178,"t20":47,"m":34,"pv":20.6,"ab":16.5,"lo":11.3,"hi":28.3,"pr":71,"a":169,"b":166,"c":4.4,"e":4.1},{"n":"Tim David","k":6,"pb":274,"ipl":116,"t20":158,"m":37,"pv":22.2,"ab":21.2,"lo":11.3,"hi":32.5,"pr":77,"a":174,"b":178,"c":5.5,"e":4.9},{"n":"Sai Sudharsan","k":7,"pb":266,"ipl":266,"t20":0,"m":34,"pv":14.4,"ab":13.3,"lo":7.8,"hi":20.3,"pr":21,"a":133,"b":152,"c":2.3,"e":3.1},{"n":"Glenn Phillips","k":8,"pb":203,"ipl":6,"t20":197,"m":21,"pv":16.4,"ab":14.1,"lo":6.4,"hi":25.3,"pr":42,"a":133,"b":154,"c":1.5,"e":4.7},{"n":"Shreyas Iyer","k":9,"pb":420,"ipl":312,"t20":108,"m":43,"pv":15.9,"ab":13.2,"lo":6.2,"hi":24.4,"pr":40,"a":155,"b":153,"c":3.3,"e":4.4},{"n":"Namboori Tilak Varma","k":10,"pb":611,"ipl":291,"t20":320,"m":54,"pv":13.0,"ab":11.9,"lo":5.3,"hi":20.2,"pr":16,"a":137,"b":146,"c":3.4,"e":3.4}],
+"bowl":[{"n":"Rashid Khan","k":1,"pb":466,"ipl":241,"t20":225,"m":58,"pv":18.6,"ab":18.5,"lo":11.5,"hi":25.5,"pr":89,"a":7.48,"b":7.49,"w":27,"o":76.5,"c":34,"e":34},{"n":"Sunil Narine","k":2,"pb":288,"ipl":288,"t20":0,"m":32,"pv":17.3,"ab":16.9,"lo":11.0,"hi":23.8,"pr":82,"a":6.99,"b":6.79,"w":16,"o":47.5,"c":35,"e":36},{"n":"Jasprit Bumrah","k":3,"pb":321,"ipl":268,"t20":53,"m":41,"pv":19.0,"ab":18.8,"lo":10.6,"hi":28.1,"pr":86,"a":7.21,"b":7.32,"w":12,"o":52.0,"c":42,"e":40},{"n":"Varun Chakravarthy","k":4,"pb":365,"ipl":230,"t20":135,"m":42,"pv":16.7,"ab":16.9,"lo":8.7,"hi":24.8,"pr":76,"a":8.03,"b":8.07,"w":21,"o":60.0,"c":36,"e":37},{"n":"Blessing Muzarabani","k":5,"pb":181,"ipl":2,"t20":179,"m":26,"pv":15.5,"ab":15.3,"lo":6.9,"hi":23.5,"pr":63,"a":7.07,"b":7.66,"w":7,"o":29.0,"c":46,"e":40},{"n":"Mujeeb Ur Rahman","k":6,"pb":218,"ipl":0,"t20":218,"m":21,"pv":13.6,"ab":13.5,"lo":4.1,"hi":22.9,"pr":49,"a":7.11,"b":6.93,"w":11,"o":35.0,"c":38,"e":41},{"n":"Mahedi Hasan","k":7,"pb":162,"ipl":0,"t20":162,"m":20,"pv":13.7,"ab":13.1,"lo":4.0,"hi":24.3,"pr":52,"a":5.65,"b":7.24,"w":10,"o":25.8,"c":47,"e":41},{"n":"Kuldeep Yadav","k":8,"pb":330,"ipl":232,"t20":98,"m":44,"pv":12.1,"ab":11.9,"lo":3.4,"hi":20.4,"pr":40,"a":7.66,"b":8.13,"w":19,"o":53.5,"c":30,"e":32},{"n":"Mitchell Santner","k":9,"pb":224,"ipl":104,"t20":120,"m":34,"pv":11.0,"ab":11.1,"lo":2.8,"hi":20.4,"pr":32,"a":7.93,"b":7.5,"w":11,"o":35.8,"c":31,"e":35},{"n":"Shakib Al Hasan","k":10,"pb":71,"ipl":0,"t20":71,"m":9,"pv":9.7,"ab":9.4,"lo":2.6,"hi":16.7,"pr":18,"a":6.6,"b":6.86,"w":3,"o":11.7,"c":46,"e":36}],
+"sens":[["Leverage threshold LI >= 1.25",7,7],["Leverage threshold LI >= 2.0",8,6],["Top 10% leverage balls",9,5],["Top 30% leverage balls",7,7],["No win-probability closeness gate",9,7],["Closeness gate 0.2-0.8",9,7],["Chases only (innings 2)",7,6],["Include associate-nation matches",9,7],["IPL matches only",6,4],["T20I matches only",6,6],["Stricter sample rules",7,7],["Looser sample rules",8,7],["Remove observed-pressure evidence gate",8,7]]};
+let mode='bat',sortKey='k',sortDir=1,open=null;
+const $=s=>document.querySelector(s),esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NS='http://www.w3.org/2000/svg';
+
+function plot(){
+ const L=D[mode],W=1000,rowH=40,top=26,left=190,right=70,H=top+L.length*rowH+34;
+ const lo=Math.floor(Math.min(0,...L.map(r=>r.lo))/5)*5,hi=Math.ceil(Math.max(...L.map(r=>r.hi))/5)*5;
+ const X=v=>left+(v-lo)/(hi-lo)*(W-left-right);
+ let s='';
+ const step=hi-lo>40?10:5;
+ for(let v=lo;v<=hi;v+=step){s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${top-6}" y2="${H-26}" stroke="var(--line)" stroke-width="${v===0?1.6:.6}"/><text x="${X(v)}" y="${H-10}" text-anchor="middle">${v}</text>`}
+ s+=`<text x="${left}" y="12">runs per 100 pressure balls above par</text><text x="${W-right+10}" y="12">In top 10</text>`;
+ L.forEach((r,i)=>{const y=top+i*rowH+rowH/2;
+  s+=`<g class="r" data-i="${i}"><rect class="hov" x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" fill="transparent"/>
+  <text x="8" y="${y+4}" style="font:700 15px Georgia;fill:var(--pink)">${r.k}</text>
+  <text class="nm" x="32" y="${y+4}">${esc(r.n)}</text>
+  <rect x="${X(r.lo)}" y="${y-3.5}" width="${X(r.hi)-X(r.lo)}" height="7" rx="3" fill="var(--blue)" opacity=".55"/>
+  <line x1="${X(r.ab)}" x2="${X(r.ab)}" y1="${y-10}" y2="${y+10}" stroke="var(--ink)" stroke-width="2"/>
+  <ellipse cx="${X(r.pv)}" cy="${y}" rx="5" ry="7" fill="var(--pink)"/>
+  <text x="${W-right+10}" y="${y+4}">${r.pr}%</text>
+  <title>${esc(r.n)}: estimate ${r.pv}, usual ${r.ab}, range ${r.lo} to ${r.hi}</title></g>`});
+ const p=$('#plot');p.setAttribute('viewBox',`0 0 ${W} ${H}`);p.innerHTML=s;
+ p.querySelectorAll('g.r').forEach(g=>g.onclick=()=>{open=D[mode][+g.dataset.i].n;table();$('#tbl').scrollIntoView({behavior:'smooth',block:'center'})});
+}
+
+function detail(r){return mode=='bat'?
+ `<div><b>Pressure balls (IPL / T20I)</b>${r.pb} (${r.ipl} / ${r.t20}) in ${r.m} innings</div><div><b>Strike rate: pressure vs usual</b>${r.a} vs ${r.b}</div><div><b>Dismissals per 100 balls: pressure vs usual</b>${r.c} vs ${r.e}</div><div><b>Usual level / estimate</b>${r.ab} / ${r.pv}</div>`:
+ `<div><b>Pressure overs (wickets)</b>${r.o} (${r.w}) in ${r.m} matches</div><div><b>Economy: pressure vs usual</b>${r.a} vs ${r.b}</div><div><b>Dot-ball %: pressure vs usual</b>${r.c} vs ${r.e}</div><div><b>Usual level / estimate</b>${r.ab} / ${r.pv}</div>`}
+
+function table(){
+ const cols=[['k','#'],['n','Player'],['pb','Pressure balls'],['ab','Usual level'],['pv','Estimate'],['lo','Floor (p5)'],['pr','In top 10']];
+ $('#tbl thead').innerHTML='<tr>'+cols.map(c=>`<th data-k="${c[0]}" class="${['pb','ab'].includes(c[0])?'hide-s':''}">${c[1]}${sortKey===c[0]?(sortDir>0?' &#9650;':' &#9660;'):''}</th>`).join('')+'</tr>';
+ const L=[...D[mode]].sort((a,b)=>(a[sortKey]>b[sortKey]?1:a[sortKey]<b[sortKey]?-1:0)*sortDir);
+ $('#tbl tbody').innerHTML=L.map(r=>`<tr class="m" data-n="${esc(r.n)}"><td>${r.k}</td><td>${esc(r.n)}</td><td class="hide-s">${r.pb}</td><td class="hide-s">${r.ab}</td><td>${r.pv}</td><td>${r.lo}</td><td><span class="pill" style="width:${r.pr*.4}px"></span>${r.pr}%</td></tr>`+(open===r.n?`<tr class="d"><td colspan="7"><div class="det">${detail(r)}</div></td></tr>`:'')).join('');
+ document.querySelectorAll('#tbl th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==='n'||k==='k'?1:-1}table()});
+ document.querySelectorAll('#tbl tr.m').forEach(tr=>tr.onclick=()=>{open=open===tr.dataset.n?null:tr.dataset.n;table()});
+}
+
+function bars(id,items,max,fmt){$(id).innerHTML=items.map(([l,v,c])=>`<div><span>${l}</span><span class="bar"><span style="width:${Math.max(v/max*100,0.5)}%;background:${c}"></span></span><span>${fmt(v)}</span></div>`).join('')}
+bars('#c1',[['This model',2.20,'var(--pink)'],['Draft batting flag',.99,'var(--mute)'],['Draft bowling flag',1.33,'var(--mute)'],['All balls',1.0,'var(--line)']],2.4,v=>v.toFixed(2));
+bars('#c2',[['This model',0,'var(--pink)'],['Draft batting flag',26.5,'var(--mute)'],['Draft bowling flag',18.5,'var(--mute)'],['All balls',19.6,'var(--line)']],30,v=>v.toFixed(0)+'%');
+$('#sens').innerHTML='<div class="sl"><b>Assumption changed</b><b style="color:var(--blue)">Batters kept (of 10)</b><b style="color:var(--pink)">Bowlers kept (of 10)</b></div>'+D.sens.map(s=>`<div class="sl"><span>${esc(s[0])}</span><span style="display:flex;gap:8px;align-items:center"><span class="bar" style="flex:1"><span style="width:${s[1]*10}%;background:var(--blue)"></span></span>${s[1]}</span><span style="display:flex;gap:8px;align-items:center"><span class="bar" style="flex:1"><span style="width:${s[2]*10}%;background:var(--pink)"></span></span>${s[2]}</span></div>`).join('');
+
+function set(m){mode=m;sortKey='k';sortDir=1;open=null;$('#bBat').setAttribute('aria-pressed',m=='bat');$('#bBowl').setAttribute('aria-pressed',m=='bowl');plot();table()}
+$('#bBat').onclick=()=>set('bat');$('#bBowl').onclick=()=>set('bowl');
+plot();table();
+</script>
+</body></html>
